@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Serviço do Serv
+  server:
+    build: .
+    command: java Server
+    ports:
+      # Expõe a porta 9870 do contêiner para a sua máquina (host)
+      - "9870:9870/udp"
+    networks:
+      - app-network
+
+  # Serviço do Cliente UDP
+  client:
+    build: .
+    command: java Client
+    depends_on:
+      - server
+    networks:
+      - app-network
+    # Essencial para permitir que você digite no terminal do cliente
+    stdin_open: true
+    tty: true
+
+# Define a rede que permitirá a comunicação entre os contêineres
+networks:
+  app-network:
+    driver: bridge
